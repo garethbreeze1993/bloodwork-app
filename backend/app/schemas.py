@@ -27,3 +27,10 @@ class ResultResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ResultCreate(BaseModel):
+
+    value: Decimal
+    date: date
+    marker_id: int
