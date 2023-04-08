@@ -6,14 +6,17 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import models
+from app.oauth2 import get_current_user
 from app.schemas import ResultResponse, ResultCreate
 
 router = APIRouter(prefix="/api/v1/results", tags=["results"])
 
 
 @router.get("/", response_model=List[ResultResponse])
-def get_latest_results_each_marker(db_session: Session = Depends(get_db)):
-    user_id = 1
+def get_latest_results_each_marker(db_session: Session = Depends(get_db),
+                                   current_user: 'models.User' = Depends(get_current_user)):
+
+    user_id = current_user.id
 
     get_latest_result = (db_session.execute(select(models.Result.id)
                                             .distinct(models.Result.marker_id)
@@ -32,8 +35,9 @@ def get_latest_results_each_marker(db_session: Session = Depends(get_db)):
 
 
 @router.get("/{marker_id}", response_model=List[ResultResponse])
-def get_marker_results_by_id(marker_id: int, db_session: Session = Depends(get_db)):
-    user_id = 1
+def get_marker_results_by_id(marker_id: int, db_session: Session = Depends(get_db),
+                             current_user: 'models.User' = Depends(get_current_user)):
+    user_id = current_user.id
 
     query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date)
                                .join(models.Result, models.Result.marker_id == models.Marker.id)
@@ -48,9 +52,10 @@ def get_marker_results_by_id(marker_id: int, db_session: Session = Depends(get_d
 
 
 @router.post("/", response_model=ResultResponse, status_code=status.HTTP_201_CREATED)
-def post_new_result(result_data: ResultCreate, db_session: Session = Depends(get_db)):
+def post_new_result(result_data: ResultCreate, db_session: Session = Depends(get_db),
+                    current_user: 'models.User' = Depends(get_current_user)):
 
-    user_id = 1
+    user_id = current_user.id
 
     result_dict = result_data.dict()
 
@@ -77,9 +82,11 @@ def post_new_result(result_data: ResultCreate, db_session: Session = Depends(get
 
 
 @router.delete("/{result_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_result(result_id: int, db_session: Session = Depends(get_db)):
+def delete_result(result_id: int, db_session: Session = Depends(get_db),
+                  current_user: 'models.User' = Depends(get_current_user)):
+
     result = db_session.get(models.Result, result_id)
-    user_id = 1
+    user_id = current_user.id
 
     if not result:
         # log.error(f'Task not found id={id_} when deleting task')
