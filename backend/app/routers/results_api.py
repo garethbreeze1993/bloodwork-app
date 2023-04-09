@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, status, HTTPException, Response
+from fastapi_pagination import paginate, Page
 from sqlalchemy import select, and_, desc, distinct, exc
 from sqlalchemy.orm import Session
 
@@ -12,7 +13,7 @@ from app.schemas import ResultResponse, ResultCreate
 router = APIRouter(prefix="/api/v1/results", tags=["results"])
 
 
-@router.get("/", response_model=List[ResultResponse])
+@router.get("/", response_model=Page[ResultResponse])
 def get_latest_results_each_marker(db_session: Session = Depends(get_db),
                                    current_user: 'models.User' = Depends(get_current_user)):
 
@@ -31,7 +32,7 @@ def get_latest_results_each_marker(db_session: Session = Depends(get_db),
                                       models.Result.id.in_(get_latest_result)))\
         .all()
 
-    return query
+    return paginate(query)
 
 
 @router.get("/{marker_id}", response_model=List[ResultResponse])
