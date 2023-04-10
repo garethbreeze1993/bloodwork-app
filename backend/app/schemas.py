@@ -63,3 +63,7 @@ class NewAccessTokenResponse(BaseModel):
 
 class TokenData(BaseModel):
     user_id: int
+
+
+class RefreshToken(BaseModel):
+    refresh_token: str

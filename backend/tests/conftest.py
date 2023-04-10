@@ -1,6 +1,9 @@
+from typing import List
+
 from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.database import Base, get_db
 from app.main import app
@@ -132,6 +135,11 @@ def refresh_token(test_user):
 
 @pytest.fixture
 def create_test_markers(get_test_db_session):
+    """
+    Create some blood markers for test database and return them for use in results_api tests
+    :param get_test_db_session: SQLAlchemy session for use with test database
+    :return: A list of models.Markers
+    """
     test_markers_data = [{'name': 'T4 - Total', 'unit_measurement': 'pmol/L', 'below_standard_lower': 43.76,
                           'below_standard_upper': 57.92, 'optimal_lower': 77.22, 'optimal_upper': 153.15,
                           'above_standard_lower': 154.44, 'above_standard_upper': 173.74},
@@ -146,12 +154,22 @@ def create_test_markers(get_test_db_session):
     get_test_db_session.commit()
 
     marker_query = get_test_db_session.execute(select(models.Marker))\
+        .scalars() \
         .all()
     return marker_query
 
 
 @pytest.fixture
 def create_test_results(get_test_db_session, test_user, test_user_2, create_test_markers):
+    """
+    Create some blood marker results for test database and return them for use in results_api tests
+
+    :param get_test_db_session: SQLAlchemy session for use with test database
+    :param test_user: A model.User
+    :param test_user_2: A different model.User
+    :param create_test_markers: List of Markers for use in results
+    :return: List of models.Results
+    """
     test_results_data = [
         {'marker_id': create_test_markers[0].id, 'user_id': test_user['id'], 'value': 104.2, 'date': '2021-11-17'},
         {'marker_id': create_test_markers[0].id, 'user_id': test_user['id'], 'value': 105.2, 'date': '2021-11-18'},
@@ -164,7 +182,7 @@ def create_test_results(get_test_db_session, test_user, test_user_2, create_test
         {'marker_id': create_test_markers[1].id, 'user_id': test_user['id'], 'value': 16.5, 'date': '2021-11-19'},
         {'marker_id': create_test_markers[1].id, 'user_id': test_user['id'], 'value': 16.4, 'date': '2021-11-20'},
         {'marker_id': create_test_markers[1].id, 'user_id': test_user['id'], 'value': 17.0, 'date': '2021-11-21'},
-        {'marker_id': create_test_markers[1].id, 'user_id': test_user['id'], 'value': 17.3, 'date': '2022-11-22'},
+        {'marker_id': create_test_markers[1].id, 'user_id': test_user['id'], 'value': 17.3, 'date': '2022-11-29'},
         {'marker_id': create_test_markers[0].id, 'user_id': test_user_2['id'], 'value': 100.0, 'date': '2022-12-21'},
         {'marker_id': create_test_markers[1].id, 'user_id': test_user_2['id'], 'value': 10.0, 'date': '2022-12-10'}
     ]
@@ -176,5 +194,6 @@ def create_test_results(get_test_db_session, test_user, test_user_2, create_test
     get_test_db_session.commit()
 
     result_query = get_test_db_session.execute(select(models.Result)) \
+        .scalars() \
         .all()
     return result_query
