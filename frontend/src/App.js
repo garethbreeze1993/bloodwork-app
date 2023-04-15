@@ -1,24 +1,44 @@
 import logo from './logo.svg';
 import './App.css';
+import NavComponent from "./components/NavBar";
+import LatestResults from "./components/LatestResults";
+import PleaseLogInJumbotron from "./components/PleaseLogInJumbotron";
+import React from "react";
 
 function App() {
+    const loggedIn = true;
+    const userEmail = "gareth.breeze1993@gmail.com";
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+          <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">Bloodwork App</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarCollapse">
+                <NavComponent
+                    loggedIn={loggedIn}
+                    userEmail={userEmail}
+                />
+                    <form className="d-flex" role="search">
+                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <button className="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <main className={"mainPageBackground"}>
+            { loggedIn ?
+                <LatestResults />
+            :
+                <PleaseLogInJumbotron />
+            }
+        </main>
+    </>
   );
 }
 
