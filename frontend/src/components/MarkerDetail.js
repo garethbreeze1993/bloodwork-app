@@ -29,19 +29,7 @@ function MarkerDetail(props) {
 
     return (
         <>
-            <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="/">Bloodwork App</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarCollapse">
-                        <NavComponent loggedIn={loggedIn} userEmail={userEmail}/>
-                    </div>
-                </div>
-            </nav>
+            <NavComponent loggedIn={loggedIn} userEmail={userEmail} homePage={false} />
             <main className={"mainPageBackground container"}>
                 <canvas className="my-4 w-100" id="myChart" width="900" height="380"></canvas>
                 <h2>Section title</h2>

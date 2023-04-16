@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import BloodResultCard from "./BloodResultCard";
 import fakeData from "../fakeData";
-function LatestResults() {
+function LatestResults(props) {
+    console.log(props.searchQuery)
     const rows = [];
     let columns = [];
   fakeData.items.forEach((data, index) => {
