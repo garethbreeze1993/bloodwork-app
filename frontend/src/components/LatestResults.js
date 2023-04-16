@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import BloodResultCard from "./BloodResultCard";
 import fakeData from "../fakeData";
-import {createBrowserRouter} from "react-router-dom";
 function LatestResults() {
     const rows = [];
     let columns = [];

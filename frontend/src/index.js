@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './index.css';
 import App from './App';
+import MarkerDetail from "./components/MarkerDetail";
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,7 +13,7 @@ root.render(
           <Routes>
             <Route path={'/'} element={<App />}></Route>
             {/*<Route path="/create" element={<Create />} />*/}
-            {/*<Route path="marker/:markerID" element={<MarkerDetail />} />*/}
+            <Route path="marker/:markerID" element={<MarkerDetail />} />
             {/*<Route path="/login" element={<Login />} />*/}
             {/*<Route path="/signup" element={<SignUp />} />*/}
             {/*<Route path="/logout" element={<LogOut />} />*/}
