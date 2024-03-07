@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import React from "react";
 
 const Login = () => {
-    const loggedIn = false;
+    const loggedIn = React.useState(false);
     const [loginFormObj, setLoginFormOj] = React.useState(
         {formEmail: '', formPassword: ''});
     const [formError, setFormError] = React.useState(false);

@@ -5,7 +5,7 @@ import PleaseLogInJumbotron from "./components/PleaseLogInJumbotron";
 import React from "react";
 
 function App() {
-    const loggedIn = true;
+    const loggedIn = false;
     const userEmail = "gareth.breeze1993@gmail.com";
 
     const [searchQueryUsed, setSearchQuery] = React.useState(false);

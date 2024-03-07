@@ -1,8 +1,12 @@
 import NavComponent from "./NavBar";
 import {useNavigate} from "react-router-dom";
 import React from "react";
+import axios from "axios";
+
 
 const SignUp = () => {
+    // const axios = require('axios').default;
+    const [formSubmitted, setFormsubmitted] = React.useState(false);
     const loggedIn = false;
     const [signUpFormObj, setSignUpFormObj] = React.useState(
         {formEmail: '', formPassword1: '', formPassword2: ''});
@@ -16,7 +20,17 @@ const SignUp = () => {
             setFormErrorMsg("Passwords need to match")
             return
         }
-        console.log(signUpFormObj)
+        let dataObject = {email: signUpFormObj.formEmail, password: signUpFormObj.formPassword1}
+
+        axios.post(`http://localhost:8000/api/v1/users/`, dataObject)
+            .then(function (response) {
+                setSignUpFormObj({formEmail: '', formPassword1: '', formPassword2: ''})
+                setFormsubmitted(true)
+                })
+            .catch(function (error) {
+                setFormError(true)
+                setFormErrorMsg("Error when submitting form. Please try again later.")
+            });
     }
 
     const handleChange = (event) => {
@@ -34,6 +48,8 @@ const SignUp = () => {
         <NavComponent
             loggedIn={loggedIn}
         />
+            {formSubmitted && <h3><a href={"/login"}>Successfully signed up! Please click the link to Log in</a></h3>}
+
             <main className={"mainPageBackground mainLocation container"}>
                 {formError && <div className="alert alert-danger" role="alert">
                     {formErrorMsg}</div>}
