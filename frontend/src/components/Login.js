@@ -1,16 +1,41 @@
 import NavComponent from "./NavBar";
 import {useNavigate} from "react-router-dom";
 import React from "react";
+import axios from "axios";
+
 
 const Login = () => {
-    const loggedIn = React.useState(false);
+    const loggedIn = false;
     const [loginFormObj, setLoginFormOj] = React.useState(
         {formEmail: '', formPassword: ''});
     const [formError, setFormError] = React.useState(false);
+    let navigate = useNavigate();
+
 
     const handleLoginSubmit = (event, loginFormObj) => {
         event.preventDefault();
+        const bodyFormData = new FormData();
+        bodyFormData.append('username', loginFormObj.formEmail)
+        bodyFormData.append('password', loginFormObj.formPassword)
         console.log(loginFormObj)
+        axios.post(`http://localhost:8000/api/v1/login`, bodyFormData)
+            .then(function (response) {
+                setLoginFormOj({formEmail: '', formPassword1: ''})
+                localStorage.setItem('userToken', response.data.access_token)
+                localStorage.setItem('userRefreshToken', response.data.refresh_token)
+                localStorage.setItem('userEmail', response.data.user_email)
+                navigate("/");
+                })
+            .catch(function (error) {
+                setFormError(true)
+                if(error.response.status === 401){
+                    console.log(error.response.detail)
+                }
+                else{
+                    console.log("Error when submitting form. Please try again later.")
+                }
+            });
+
     }
 
     const handleChange = (event) => {

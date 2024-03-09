@@ -5,10 +5,13 @@ import PleaseLogInJumbotron from "./components/PleaseLogInJumbotron";
 import React from "react";
 
 function App() {
-    const loggedIn = false;
-    const userEmail = "gareth.breeze1993@gmail.com";
+
+    const userEmail = localStorage.getItem('userEmail');
 
     const [searchQueryUsed, setSearchQuery] = React.useState(false);
+    const userToken = localStorage.getItem('userToken');
+    const loggedIn = !!userToken
+
 
 
 

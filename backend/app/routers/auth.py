@@ -41,7 +41,8 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db_session
         # create token and return it
     access_token = oauth2.create_access_token(data=dict(user_id=user.id))
     refresh_token = oauth2.create_refresh_token(data=dict(user_id=user.id))
-    return {'access_token': access_token, "token_type": "bearer", "refresh_token": refresh_token}
+    return {'access_token': access_token, "token_type": "bearer", "refresh_token": refresh_token,
+            "user_email": user.email}
 
 
 @router.post('/refresh', response_model=NewAccessTokenResponse)

@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import MarkerDetail from "./components/MarkerDetail";
 import Login from "./components/Login";
+import LogOut from "./components/LogOut";
 import SignUp from "./components/SignUp";
 import reportWebVitals from './reportWebVitals';
 
@@ -18,7 +19,7 @@ root.render(
             <Route path="marker/:markerID" element={<MarkerDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            {/*<Route path="/logout" element={<LogOut />} />*/}
+            <Route path="/logout" element={<LogOut />} />
             {/*<Route path="*" element={<HTTP404 />} />*/}
           </Routes>
       </BrowserRouter>
