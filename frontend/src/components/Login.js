@@ -2,7 +2,7 @@ import NavComponent from "./NavBar";
 import {useNavigate} from "react-router-dom";
 import React from "react";
 import axios from "axios";
-
+import Cookies from "js-cookie";
 
 const Login = () => {
     const loggedIn = false;
@@ -21,6 +21,9 @@ const Login = () => {
         axios.post(`http://localhost:8000/api/v1/login`, bodyFormData)
             .then(function (response) {
                 setLoginFormOj({formEmail: '', formPassword1: ''})
+                Cookies.set("userToken", response.data.access_token, { expires: 7, path: "/" });
+                Cookies.set("userRefreshToken", response.data.refresh_token, { expires: 7, path: "/" });
+                Cookies.set("userEmail", response.data.user_email, { expires: 7, path: "/" });
                 localStorage.setItem('userToken', response.data.access_token)
                 localStorage.setItem('userRefreshToken', response.data.refresh_token)
                 localStorage.setItem('userEmail', response.data.user_email)
