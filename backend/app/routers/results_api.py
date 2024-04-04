@@ -1,6 +1,8 @@
+import codecs
+import csv
 from typing import List
 
-from fastapi import APIRouter, Depends, status, HTTPException, Response
+from fastapi import APIRouter, Depends, status, HTTPException, Response, UploadFile
 from fastapi_pagination import paginate, Page
 from sqlalchemy import select, and_, desc, distinct, exc
 from sqlalchemy.orm import Session
@@ -52,34 +54,17 @@ def get_marker_results_by_id(marker_id: int, db_session: Session = Depends(get_d
     return query
 
 
-@router.post("/", response_model=ResultResponse, status_code=status.HTTP_201_CREATED)
-def post_new_result(result_data: ResultCreate, db_session: Session = Depends(get_db),
+@router.post("/")
+def post_new_result(file: UploadFile, db_session: Session = Depends(get_db),
                     current_user: 'models.User' = Depends(get_current_user)):
 
     user_id = current_user.id
+    file_contents = file.file
 
-    result_dict = result_data.dict()
+    reader = csv.DictReader(codecs.iterdecode(file_contents, 'utf-8'))
 
-    new_result = models.Result(**result_dict)
-    new_result.user_id = user_id
-
-    db_session.add(new_result)
-
-    try:
-        db_session.commit()
-    except exc.SQLAlchemyError as e:
-        # log.error('Error creating task sql alchemy')
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail=f'Unexpected problem please check the request and try again')
-
-    db_session.refresh(new_result)
-
-    query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date)
-                               .join(models.Result, models.Result.marker_id == models.Marker.id)
-                               .where(models.Result.id == new_result.id)) \
-        .one()
-
-    return query
+    for r in reader:
+        print(r)
 
 
 @router.delete("/{result_id}", status_code=status.HTTP_204_NO_CONTENT)

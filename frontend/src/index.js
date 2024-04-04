@@ -7,6 +7,7 @@ import MarkerDetail from "./components/MarkerDetail";
 import Login from "./components/Login";
 import LogOut from "./components/LogOut";
 import SignUp from "./components/SignUp";
+import CreateForm from "./components/Create";
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,7 +16,7 @@ root.render(
       <BrowserRouter>
           <Routes>
             <Route path={'/'} element={<App />}></Route>
-            {/*<Route path="/create" element={<Create />} />*/}
+            <Route path="/create" element={<CreateForm />} />
             <Route path="marker/:markerID" element={<MarkerDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
