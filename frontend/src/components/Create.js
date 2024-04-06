@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 const CreateForm = () => {
     // const axios = require('axios').default;
+    const userEmail = Cookies.get('userEmail');
     const [formSubmitted, setFormsubmitted] = React.useState(false);
     const [file, setFile] = React.useState(null);
 
@@ -38,6 +39,8 @@ const CreateForm = () => {
         <>
         <NavComponent
             loggedIn={true}
+            userEmail={userEmail}
+
         />
             {formSubmitted && <h3><a href={"/login"}>Successfully signed up! Please click the link to Log in</a></h3>}
 

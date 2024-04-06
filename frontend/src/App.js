@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 
 function App() {
 
-    const userEmail = localStorage.getItem('userEmail');
+    const userEmail = Cookies.get('userEmail');
 
     const [searchQueryUsed, setSearchQuery] = React.useState(false);
     // const userToken = localStorage.getItem('userToken');

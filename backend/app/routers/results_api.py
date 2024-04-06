@@ -4,6 +4,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status, HTTPException, Response, UploadFile
 from fastapi_pagination import paginate, Page
+from pydantic import ValidationError
 from sqlalchemy import select, and_, desc, distinct, exc
 from sqlalchemy.orm import Session
 
@@ -63,8 +64,40 @@ def post_new_result(file: UploadFile, db_session: Session = Depends(get_db),
 
     reader = csv.DictReader(codecs.iterdecode(file_contents, 'utf-8'))
 
-    for r in reader:
-        print(r)
+    error_list = []
+
+    for line, result in enumerate(reader):
+        rsult_marker = result.get('Marker')
+
+        marker = db_session.execute(select(models.Marker.id)
+                                    .where(models.Marker.name == rsult_marker))\
+            .first()
+
+        if marker is None:
+            error_list.append({'lineNumber': line, 'errorMessage': 'Marker does not exist'})
+            continue
+
+        marker_id = marker.id
+
+        validation_dict = dict(value=result['Value'], date=result['Date'], marker_id=marker_id)
+
+        try:
+            result_create = ResultCreate(**validation_dict)
+        except ValidationError as e:
+            error_list.append({'lineNumber': line, 'errorMessage': 'Problem with data type for this line please fix'})
+            continue
+        else:
+            result = models.Result()
+            result.marker_id = result_create.marker_id
+            result.date = result_create.date
+            result.value = result_create.value
+            result.user_id = user_id
+
+            db_session.add(result)
+
+    db_session.commit()
+
+    return {'Message': 'Success', 'error_list': error_list}
 
 
 @router.delete("/{result_id}", status_code=status.HTTP_204_NO_CONTENT)
