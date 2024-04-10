@@ -74,7 +74,7 @@ def post_new_result(file: UploadFile, db_session: Session = Depends(get_db),
             .first()
 
         if marker is None:
-            error_list.append({'lineNumber': line, 'errorMessage': 'Marker does not exist'})
+            error_list.append({'lineNumber': line + 2, 'errorMessage': 'Marker does not exist'})
             continue
 
         marker_id = marker.id
@@ -84,7 +84,7 @@ def post_new_result(file: UploadFile, db_session: Session = Depends(get_db),
         try:
             result_create = ResultCreate(**validation_dict)
         except ValidationError as e:
-            error_list.append({'lineNumber': line, 'errorMessage': 'Problem with data type for this line please fix'})
+            error_list.append({'lineNumber': line + 2, 'errorMessage': str(e)})
             continue
         else:
             result = models.Result()
@@ -95,9 +95,13 @@ def post_new_result(file: UploadFile, db_session: Session = Depends(get_db),
 
             db_session.add(result)
 
-    db_session.commit()
+    if not error_list:
+        message = 'Successfuly added to db'
+        db_session.commit()
+    else:
+        message = 'Errors found in CSV please see list and make changes'
 
-    return {'Message': 'Success', 'error_list': error_list}
+    return {'message': message, 'error_list': error_list}
 
 
 @router.delete("/{result_id}", status_code=status.HTTP_204_NO_CONTENT)

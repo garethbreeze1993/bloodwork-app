@@ -9,7 +9,8 @@ import Cookies from "js-cookie";
 const CreateForm = () => {
     // const axios = require('axios').default;
     const userEmail = Cookies.get('userEmail');
-    const [formSubmitted, setFormsubmitted] = React.useState(false);
+    const [formErrors, setFormErrors] = React.useState([]);
+    const [formMessage, setFormMessage] = React.useState('');
     const [file, setFile] = React.useState(null);
 
     const handleCreateSubmit = (event, loginFormObj) => {
@@ -23,7 +24,10 @@ const CreateForm = () => {
         axios.post(`http://localhost:8000/api/v1/results/`, formData,
             { headers: { Authorization: `Bearer ${Cookies.get("userToken")}`}})
             .then(function (response) {
-                console.log("success")
+                setFormErrors(response.data['error_list'])
+                setFormMessage(response.data['message'])
+                // console.log(response.data['error_list'])
+                // console.log(response.data['message'])
                 })
             .catch(function (error) {
                 console.log("error")
@@ -35,6 +39,12 @@ const CreateForm = () => {
         setFile(target.files[0])
     }
 
+    const arrayDataItems = formErrors.map(resultErr =>
+            <li key={resultErr.lineNumber}>
+                      <p>Error on line number{resultErr.lineNumber} {resultErr.errorMessage}</p>
+                    </li>
+    )
+
     return (
         <>
         <NavComponent
@@ -42,9 +52,11 @@ const CreateForm = () => {
             userEmail={userEmail}
 
         />
-            {formSubmitted && <h3><a href={"/login"}>Successfully signed up! Please click the link to Log in</a></h3>}
 
             <main className={"mainPageBackground mainLocation container"}>
+                {formMessage && <h2>{formMessage}</h2>}
+                {formErrors.length > 0 && arrayDataItems}
+
                 <form onSubmit={(event) => {handleCreateSubmit(event)}}>
                     <div className="mb-3">
                         <label htmlFor="uploadFile" className="form-label">Upload File</label>
