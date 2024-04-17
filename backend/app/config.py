@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     refresh_secret_key: str
     refresh_token_expire_minutes: int
+    marker_data_file: str
 
     class Config:
         env_file = '../.env'
