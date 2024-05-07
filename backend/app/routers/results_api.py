@@ -29,7 +29,7 @@ def get_latest_results_each_marker(db_session: Session = Depends(get_db),
         .scalars()\
         .all()
 
-    query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date)
+    query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date, models.Result.id)
                                .join(models.Result, models.Result.marker_id == models.Marker.id)
                                .where(models.Result.user_id == user_id,
                                       models.Result.id.in_(get_latest_result)))\
@@ -43,7 +43,7 @@ def get_marker_results_by_id(marker_id: int, db_session: Session = Depends(get_d
                              current_user: 'models.User' = Depends(get_current_user)):
     user_id = current_user.id
 
-    query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date)
+    query = db_session.execute(select(models.Marker, models.Result.value, models.Result.date, models.Result.id)
                                .join(models.Result, models.Result.marker_id == models.Marker.id)
                                .where(models.Result.user_id == user_id,
                                       models.Result.marker_id == marker_id)

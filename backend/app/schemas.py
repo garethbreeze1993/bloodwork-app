@@ -23,6 +23,7 @@ class ResultResponse(BaseModel):
 
     value: Decimal
     date: date
+    id: int
     Marker: MarkerResponse
 
     class Config:
