@@ -1,5 +1,4 @@
 import {useParams} from "react-router-dom";
-import fakeDataDetail from "../fakeDataDetail";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import React from "react";

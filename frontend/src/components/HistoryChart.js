@@ -8,6 +8,8 @@ const HistoryChart = (props) =>{
     const labels = []
     const userResults = []
 
+    props.graphData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     props.graphData.forEach(value => {
         labels.push(value.date)
         userResults.push(value.value)
