@@ -23,17 +23,17 @@ markers_table = 'markers'
 results_table = 'results'
 
 
-def parse_marker_csv() -> List[dict]:
-    """From a CSV make a list of dicts for bulk insert of marker data"""
-
-    bulk_data = []
-    with open(settings.marker_data_file) as csv_file:
-        reader = csv.DictReader(csv_file)
-
-        for r in reader:
-            bulk_data.append(r)
-
-    return bulk_data
+# def parse_marker_csv() -> List[dict]:
+#     """From a CSV make a list of dicts for bulk insert of marker data"""
+#
+#     bulk_data = []
+#     with open(settings.marker_data_file) as csv_file:
+#         reader = csv.DictReader(csv_file)
+#
+#         for r in reader:
+#             bulk_data.append(r)
+#
+#     return bulk_data
 
 
 
@@ -65,9 +65,9 @@ def upgrade() -> None:
     op.create_foreign_key(constraint_name='results_marker_id_fkey', source_table=results_table,
                           referent_table=markers_table, local_cols=['marker_id'], remote_cols=['id'])
 
-    bulk_upload_data = parse_marker_csv()
-
-    op.bulk_insert(alembic_marker_table, bulk_upload_data)
+    # bulk_upload_data = parse_marker_csv()
+    #
+    # op.bulk_insert(alembic_marker_table, bulk_upload_data)
 
 
 def downgrade() -> None:

@@ -1,6 +1,5 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
-from pydantic import BaseSettings
-
 
 class Settings(BaseSettings):
     database_password: str
@@ -13,15 +12,11 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     refresh_secret_key: str
     refresh_token_expire_minutes: int
-    marker_data_file: str
 
-    class Config:
-        env_file = '../.env'
-
+    model_config = SettingsConfigDict(env_file="/home/gareth/Documents/Projects/bloodwork-app/backend/app/.env")
 
 @lru_cache()
 def get_settings():
     return Settings()
-
 
 settings = get_settings()
